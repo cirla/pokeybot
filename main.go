@@ -21,10 +21,10 @@ func main() {
 	router.HandleFunc("/", HomeHandler)
 
 	secureMiddleware := secure.New(secure.Options{
-		AllowedHosts:    []string{"thelunchtrain.herokuapp.com"},
+		AllowedHosts:    []string{"*.herokuapp.com"},
 		SSLRedirect:     true,
 		SSLProxyHeaders: map[string]string{"X-Forwarded-Proto": "https"},
-		IsDevelopment:   true,
+		//IsDevelopment:   true,
 	})
 
 	pokey := pokey.New()
