@@ -35,6 +35,7 @@ type Comic struct {
 	Index  uint32  `sql:"not null;unique" json:"index"`
 	Title  string  `sql:"size:255;not null" json:"title"`
 	Url    string  `sql:"size:255;not null;unique" json:"url"`
+	Image  string  `sql:"size:255;not null;unique" json:"image"`
 	Images []Image `json:"images,omitempty"`
 	Tags   []Tag   `gorm:"many2many:pokey_comic_tags;" json:"tags,omitempty"`
 }
@@ -58,14 +59,12 @@ func Open() (Database, error) {
 		sslmode = "disable"
 	}
 	connection += " sslmode=" + sslmode
-	//fmt.Printf(connection)
 
 	db, err := gorm.Open("postgres", connection)
 	if err != nil {
 		return Database{}, err
 	}
 
-	//db.LogMode(true)
 	return Database{db: db}, nil
 }
 
@@ -103,7 +102,8 @@ func (d *Database) Init() {
 const POKEY_ARCHIVE_URL = "http://www.yellow5.com/pokey/archive/"
 
 func (d *Database) populateComic(index uint32, title string, url string) {
-	comic := Comic{Index: index, Title: title, Url: url}
+	imageUrl := fmt.Sprintf("%spokey%d.gif", POKEY_ARCHIVE_URL, index)
+	comic := Comic{Index: index, Title: title, Url: url, Image: imageUrl}
 
 	doc, err := goquery.NewDocument(url)
 	if err != nil {

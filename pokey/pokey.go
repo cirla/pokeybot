@@ -108,8 +108,8 @@ func slackHandler(p *Pokey, w http.ResponseWriter, req *http.Request) {
 	}
 
 	//teamId := req.FormValue("team_id")
-	//channelId := req.FormValue("channel_id")
-	channelName := req.FormValue("channel_name")
+	channelId := req.FormValue("channel_id")
+	//channelName := req.FormValue("channel_name")
 	userId := req.FormValue("user_id")
 	userName := req.FormValue("user_name")
 	command := req.FormValue("command")
@@ -137,14 +137,11 @@ func slackHandler(p *Pokey, w http.ResponseWriter, req *http.Request) {
 		p.db.LoadImages(&comic)
 
 		var buffer bytes.Buffer
-		buffer.WriteString(fmt.Sprintf("<@%s|%s>: <%s|%s>", userId, userName, comic.Url, comic.Title))
-		//for _, img := range comic.Images {
-		//    buffer.WriteString(fmt.Sprintf("\n<%s>", img.Url))
-		//}
+		buffer.WriteString(fmt.Sprintf("<@%s|%s>: <%s|%s>\n<%s>", userId, userName, comic.Url, comic.Title, comic.Image))
 
 		msg := slackMessage{
 			Text:        buffer.String(),
-			Channel:     "#" + channelName,
+			Channel:     channelId,
 			Username:    bot.Username,
 			IconEmoji:   bot.Icon,
 			UnfurlMedia: true,
